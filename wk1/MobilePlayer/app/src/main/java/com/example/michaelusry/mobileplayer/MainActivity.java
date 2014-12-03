@@ -21,7 +21,6 @@ import android.os.ResultReceiver;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.IOException;
@@ -58,12 +57,9 @@ public class MainActivity extends Activity implements View.OnClickListener, Serv
     static String TAG = "MAIN ACTIVITY";
 
     Button play,stop,forward,back,pause;
-    ImageView albumCover;
     TextView songTitleTV;
     Boolean playPressed;
-    Boolean pressedBackFirst = false;
     MyService mService;
-    MyService.BoundServiceBinder binder;
     Boolean mBound;
 
     public static final String EXTRA_RECEIVER = "MainActivity.EXTRA_RECEIVER";
@@ -153,11 +149,6 @@ public class MainActivity extends Activity implements View.OnClickListener, Serv
 
     }
 
-//    public void onConfigurationChanged(Configuration newConfig){
-//        super.onConfigurationChanged(newConfig);
-//    }
-
-
 
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
@@ -197,6 +188,7 @@ public class MainActivity extends Activity implements View.OnClickListener, Serv
 
     }
 
+    //set song title, retrieved from the service
     public void songTitle(){
         songTitleTV.setText(MyService.songTitle);
         Log.i(TAG,"MainActivity songTitle");

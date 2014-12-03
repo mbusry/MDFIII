@@ -38,7 +38,6 @@ public class MyService extends Service implements MediaPlayer.OnPreparedListener
     public static String songTitle;
     public static int currentTrack = 0;
     int mAudioPosition = 0;
-    Boolean mPrepared = false;
 
 
     String[] songFileName = {"endofthebeginning", "helovesme", "thatsmyking",
@@ -100,7 +99,7 @@ public class MyService extends Service implements MediaPlayer.OnPreparedListener
 
     }
 
-
+    //Service binder
     @Override
     public IBinder onBind(Intent intent) {
         return new BoundServiceBinder();
@@ -135,6 +134,8 @@ public class MyService extends Service implements MediaPlayer.OnPreparedListener
 
     }
 
+// UI methods for buttons
+// song play
     protected void play() throws IOException {
         Log.i(TAG, "play()");
 //        mp.reset();
@@ -158,7 +159,7 @@ public class MyService extends Service implements MediaPlayer.OnPreparedListener
                 e.printStackTrace();
             }
 
-            mp.prepareAsync();
+//            mp.prepareAsync();
         mp.start();
 
         }
