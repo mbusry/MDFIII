@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Mobile Player</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <string name = "btn_play">Play</string>
+    <string name = "btn_pause">Pause</string>
+    <string name = "btn_stop">Stop</string>
+    <string name = "btn_forward">Forward</string>
+    <string name = "btn_back">Back</string>
+    <string name = "songtitle"></string>
+
+    <string name = "loop">Loop</string>
+
+
+
+
+</resources>
