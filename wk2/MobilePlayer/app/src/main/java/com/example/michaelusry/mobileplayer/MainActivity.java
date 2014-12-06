@@ -30,28 +30,6 @@ import android.widget.TextView;
 import java.io.IOException;
 /*
 
-Instructions
-For your assignment, you will be building an Android application that
-demonstrates your understanding of the service and notification fundamentals.
-Minimally, your app must do the following things:
-
-From a service, play multiple audio files in sequence that are loaded via
-resource identifier.
-Service and media playback supports starting, stopping, and pausing playback.
-Application shows a notification of the current song that is playing.
-Clicking the app's notification will open the application if it is closed.
-While open, the application must display UI controls for play and pause as well
-as the name of the current audio track that is playing.
-
-
-In addition to the above minimum requirements, the following functionality is
-required to demonstrate mastery of the week one topics:
-
-Audio files are loaded and played using a resource URI instead of the resource identifier.
-Application utilizes a bound service to control audio playback.
-Notification is used to run the underlying service in the foreground.
-While open, the application UI also has controls to skip through audio tracks
-both forwards and backwards.
 
 
  */
@@ -169,6 +147,7 @@ public class MainActivity extends Activity implements View.OnClickListener, Serv
             case R.id.btn_back:
                 Log.i(TAG,"Back Button");
 //                songTitleTV.setText("Back");
+                progress = 0;
                 mService.back();
 
                 break;
