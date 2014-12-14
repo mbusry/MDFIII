@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:minHeight="48dp"
+              android:padding="8dp"
+              android:id="@+id/birthday_list"
+              android:orientation="vertical" >
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_add"
+        android:id="@+id/btn_add_list"/>
+</FrameLayout>
+    <LinearLayout android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal"
+                  android:gravity="center_vertical" >
+
+        <TextView android:id="@+id/fn_birthday_list"
+                  android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:layout_weight="1.0"
+                  android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView android:id="@+id/ln_birthday_list"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_marginLeft="8dp"
+                  android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    </LinearLayout>
+
+    <TextView android:id="@+id/dob_birthday_list"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="8dp"
+              android:textAppearance="?android:attr/textAppearanceSmall" />
+
+
+
+
+</LinearLayout>
