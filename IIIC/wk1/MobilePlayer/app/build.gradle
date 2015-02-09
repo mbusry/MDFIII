@@ -1,0 +1,38 @@
+apply plugin: 'com.android.application'
+
+android {
+    signingConfigs {
+        config {
+            keyAlias 'mbu'
+            keyPassword 'john1717'
+            storeFile file('/Users/michael/Documents/School/Android SDK/keystore/MDF3.jks')
+            storePassword 'john1717'
+        }
+    }
+    compileSdkVersion 19
+    buildToolsVersion '19.1.0'
+    defaultConfig {
+        applicationId 'com.example.michaelusry.mobileplayer'
+        minSdkVersion 21
+        targetSdkVersion 21
+        versionCode 1
+        versionName '1.0'
+        signingConfig signingConfigs.config
+    }
+    buildTypes {
+        release {
+            runProguard false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
+        }
+        debug {
+            signingConfig signingConfigs.config
+        }
+    }
+    productFlavors {
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+}
