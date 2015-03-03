@@ -399,7 +399,7 @@ public class MyService extends Service implements MediaPlayer.OnPreparedListener
 
         builder.setContentIntent(pi)
                 .setSmallIcon(R.drawable.speaker)
-//                .setLargeIcon(albumart)
+                .setLargeIcon(albumart)
                 .setTicker(songTitle)
                 .setOngoing(true)
                 .setContentTitle("Playing")
