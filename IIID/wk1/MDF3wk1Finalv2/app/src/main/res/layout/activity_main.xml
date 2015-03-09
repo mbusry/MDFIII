@@ -1,0 +1,87 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/songtitle"
+        android:id="@+id/songtitletextview"
+        android:layout_alignTop="@+id/playButton"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="61dp"/>
+
+
+
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/playButton"
+        android:minHeight="32dp"
+        android:minWidth="32dp"
+        android:src="@drawable/play"
+        android:maxHeight="45dp"
+        android:maxWidth="45dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"/>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/stopButton"
+        android:minHeight="32dp"
+        android:minWidth="32dp"
+        android:src="@drawable/stop"
+        android:layout_below="@+id/playButton"
+        android:layout_alignParentLeft="true"
+        android:maxHeight="45dp"
+        android:maxWidth="45dp"
+        />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/pauseButton"
+        android:minHeight="32dp"
+        android:minWidth="32dp"
+        android:src="@drawable/pause"
+        android:layout_below="@+id/stopButton"
+        android:layout_alignParentLeft="true"
+        android:maxHeight="45dp"
+        android:maxWidth="45dp"
+        />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/forwardButton"
+        android:minHeight="32dp"
+        android:minWidth="32dp"
+        android:src="@drawable/forward"
+        android:layout_below="@+id/pauseButton"
+        android:layout_alignParentLeft="true"
+        android:maxHeight="45dp"
+        android:maxWidth="45dp"/>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/backwardButton"
+        android:minHeight="32dp"
+        android:minWidth="32dp"
+        android:src="@drawable/backward"
+        android:maxHeight="45dp"
+        android:maxWidth="45dp"
+        android:layout_below="@+id/forwardButton"
+        android:layout_alignParentLeft="true"/>
+
+
+</RelativeLayout>
