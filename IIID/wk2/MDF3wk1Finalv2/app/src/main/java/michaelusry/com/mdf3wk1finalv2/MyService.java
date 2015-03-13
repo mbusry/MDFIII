@@ -1,5 +1,10 @@
 package michaelusry.com.mdf3wk1finalv2;
 
+// MDF 3
+// Michael Usry
+// Term 1503
+
+
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -12,34 +17,31 @@ import android.net.Uri;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.ProgressBar;
 
 import java.io.IOException;
 
 /**
  * Created by Michael Usry on 3/8/15.
  */
-public class MyService extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener{
+public class MyService extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener {
 
     private static final String TAG = "MyService.TAG";
     private static final int FOREGROUND_NOTIFICATION = 0x01001;
     public static String songTitle;
     public static int currentTrack = 0;
-    int mAudioPosition = 0;
+    static int mAudioPosition = 0;
     Boolean pressedBackFirst = false;
     public static Boolean loop = false;
     MediaPlayer mp;
     String ac;
     static Bitmap albumart;
-    ProgressBar progressBar;
-    Boolean showProgressBar = false;
     public static int seconds = 0;
 
     String[] songFileName = {"endofthebeginning", "helovesme", "thatsmyking",
             "thingsofthisworld"};
     static String[] songTitleArray = {"End Of The Beginning", "He Loves Me",
             "That's My King", "Things Of This World"};
-    static String[] albumCover = {"endofthebeginning","dctalk","thatsmyking","thingsofthisworld"};
+    static String[] albumCover = {"endofthebeginning", "dctalk", "thatsmyking", "thingsofthisworld"};
 
 
     @Override
@@ -49,39 +51,45 @@ public class MyService extends Service implements MediaPlayer.OnPreparedListener
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        Log.i(TAG,"onCompletion");
+        Log.i(TAG, "Enter onCompletion");
+        Log.i(TAG, "currentTrack: " + currentTrack);
 
-        if (!loop){
-            currentTrack ++;
+        mp.reset();
+        if (!loop) {
+            currentTrack++;
+            Log.i(TAG,"!loop");
+            Log.i(TAG, "currentTrack++: " + currentTrack);
+
+            if (currentTrack > 3) {
+                currentTrack = 0;
+                Log.i(TAG, "currentTrack > 3 now: " + currentTrack);
+
+            }
         }
 
-        mAudioPosition = 0;
-        MainActivity.progress = 0;
-        seconds = 0;
-        Log.i(TAG, "currentTrack = " + currentTrack);
+        zeroOut();
 
         Uri nextTrack = Uri.parse("android.resource://" + getPackageName()
                 + "/raw/" + songFileName[currentTrack]);
 
         Log.i(TAG, "nextTrack = " + nextTrack);
 
-
         try {
-            mp.reset();
             mp.setDataSource(MyService.this, nextTrack);
             mp.prepare();
-            mp.start();
-            Log.i(TAG, "Song name: " + songFileName[currentTrack]);
-
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
-
-        MainActivity.isRunning = true;
-        songLength(mp.getDuration());
-        songTitle = songTitleArray[currentTrack];
+        mp.seekTo(mAudioPosition);
+        mp.start();
+        Log.i(TAG,"currentTrack: " + currentTrack);
         albumArt(currentTrack);
+        MainActivity.albumcover.setImageBitmap(albumart);
+
+        setProgress();
         sendToForeground();
+
+        Log.i(TAG,"end of Completion CurrentTrack: " + currentTrack);
 
     }
 
@@ -95,7 +103,8 @@ public class MyService extends Service implements MediaPlayer.OnPreparedListener
 
     }
 
-    public MyService(){}
+    public MyService() {
+    }
 
 
     public class BoundServiceBinder extends Binder {
@@ -108,7 +117,7 @@ public class MyService extends Service implements MediaPlayer.OnPreparedListener
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.i(TAG,"Service Created");
+        Log.i(TAG, "Service Created");
         mp = new MediaPlayer();
 
         initMP();
@@ -117,7 +126,7 @@ public class MyService extends Service implements MediaPlayer.OnPreparedListener
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.i(TAG,"Service Started");
+        Log.i(TAG, "Service Started");
 
         return super.onStartCommand(intent, flags, startId);
     }
@@ -131,109 +140,102 @@ public class MyService extends Service implements MediaPlayer.OnPreparedListener
 
     }
 
-    protected void play() throws IOException, IllegalArgumentException, SecurityException, IllegalStateException   {
+    protected void play() throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
         Log.i(TAG, "play()");
 
         if (mp != null) {
 
+            zeroOut();
 
             Uri file = Uri.parse("android.resource://" + getPackageName()
                     + "/raw/" + songFileName[currentTrack]);
 
             Log.i(TAG, "Uri file = " + file);
-            songTitle = songTitleArray[currentTrack];
-            albumArt(currentTrack);
             Log.i(TAG, "songTitle: " + songTitle);
             mp.reset();
             mp.setDataSource(this, file);
             mp.prepare();
             mp.seekTo(mAudioPosition);
             mp.start();
-            songLength(mp.getDuration());
-            MainActivity.progressBar.setProgress(0);
-            MainActivity.progressBar.setMax(seconds);
-            Log.i(TAG, "seconds: " + seconds);
+            setProgress();
+            Log.i(TAG,"currentTrack: " + currentTrack);
+            albumArt(currentTrack);
             sendToForeground();
 
         }
 
     }
 
-    protected void songLength(int length){
+    protected void songLength(int length) {
         seconds = (length / 1000);
-        Log.i(TAG,"seconds: " + seconds);
+        Log.i(TAG, "seconds: " + seconds);
 
 
     }
 
     protected void stop() {
         Log.i(TAG, "stop()");
-        mAudioPosition = 0;
-        MainActivity.progress = 0;
-        seconds = 0;
+        zeroOut();
         mp.stop();
 
     }
 
-    protected void forward() throws IOException, IllegalArgumentException, SecurityException, IllegalStateException{
+    protected void forward() throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
         Log.i(TAG, "forward()");
-
+        mp.stop();
         mp.reset();
-        MainActivity.isRunning = false;
-        Log.i(TAG,"currentTrack: " + currentTrack);
+        zeroOut();
+        Log.i(TAG, "currentTrack: " + currentTrack);
 
         if (!loop) {
-            Log.i(TAG,"!loop: ");
+            Log.i(TAG, "!loop: ");
 
 
             if (currentTrack >= 3) {
-                Log.i(TAG,"currentTrack: " + currentTrack);
+                Log.i(TAG, "currentTrack: " + currentTrack);
 
                 currentTrack = 0;
             } else {
-                Log.i(TAG,"BEFORE ++ currentTrack: " + currentTrack);
+                Log.i(TAG, "BEFORE ++ currentTrack: " + currentTrack);
 
                 currentTrack++;
-                Log.i(TAG,"currentTrack++: " + currentTrack);
+                Log.i(TAG, "currentTrack++: " + currentTrack);
 
             }
         }
-        Log.i(TAG,"OUTSIDE OF !loop: currentTrack: " + currentTrack);
-
-        mp.reset();
-        mAudioPosition = 0;
-        MainActivity.progress = 0;
-        seconds = 0;
+        Log.i(TAG, "OUTSIDE OF !loop: currentTrack: " + currentTrack);
         mp.setDataSource(
-                    this,
-                    Uri.parse("android.resource://" + getPackageName()
-                            + "/raw/" + songFileName[currentTrack]));
-            mp.prepare();
-
-        MainActivity.isRunning = true;
-        songLength(mp.getDuration());
-        songTitle = songTitleArray[currentTrack];
+                this,
+                Uri.parse("android.resource://" + getPackageName()
+                        + "/raw/" + songFileName[currentTrack]));
+        mp.prepare();
+        mp.seekTo(mAudioPosition);
+        mp.start();
+        setProgress();
+        Log.i(TAG,"currentTrack: " + currentTrack);
         albumArt(currentTrack);
         sendToForeground();
-        mp.start();
+
 
     }
 
-    protected void backward() throws IOException, IllegalArgumentException, SecurityException, IllegalStateException{
+    protected void backward() throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
         Log.i(TAG, "back()");
-            if (!pressedBackFirst) {
 
+        mp.reset();
+        zeroOut();
+
+        if (!pressedBackFirst) {
+            if (!loop) {
                 Log.i(TAG, "!pressedBackFirst");
 
                 currentTrack--;
                 pressedBackFirst = true;
 
             }
-
-            mp.pause();
-        MainActivity.progress = 0;
-
+        }
         if (!loop) {
+
 
             if (currentTrack < 0) {
                 currentTrack = 3;
@@ -244,17 +246,15 @@ public class MyService extends Service implements MediaPlayer.OnPreparedListener
                 }
             }
         }
-        mAudioPosition=0;
-            mp.reset();
-            mp.setDataSource(
-                    this,
-                    Uri.parse("android.resource://" + getPackageName()
-                            + "/raw/" + songFileName[currentTrack]));
-            mp.prepare();
-
+        mp.setDataSource(
+                this,
+                Uri.parse("android.resource://" + getPackageName()
+                        + "/raw/" + songFileName[currentTrack]));
+        mp.prepare();
         mp.start();
-        songLength(mp.getDuration());
-        songTitle = songTitleArray[currentTrack];
+        setProgress();
+        Log.i(TAG,"currentTrack: " + currentTrack);
+        albumArt(currentTrack);
         sendToForeground();
 
 
@@ -265,7 +265,7 @@ public class MyService extends Service implements MediaPlayer.OnPreparedListener
 
         if (mp != null && mp.isPlaying()) {
             mAudioPosition = mp.getCurrentPosition();
-            Log.i(TAG,"audioposition: " + mAudioPosition);
+            Log.i(TAG, "audioposition: " + mAudioPosition);
 
             mp.pause();
         }
@@ -279,13 +279,15 @@ public class MyService extends Service implements MediaPlayer.OnPreparedListener
         if (mp != null) {
             mp.release();
             stopForeground(true);
+            zeroOut();
         }
     }
 
-    public void sendToForeground(){
-        Intent i = new Intent(this,MainActivity.class);
+    public void sendToForeground() {
+        Log.i(TAG, "sendToForeground:");
+        Intent i = new Intent(this, MainActivity.class);
         i.addFlags(i.FLAG_ACTIVITY_SINGLE_TOP);
-        PendingIntent pi = PendingIntent.getActivity(this,0,i,PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pi = PendingIntent.getActivity(this, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Notification.Builder builder = new Notification.Builder(this);
 
@@ -301,9 +303,12 @@ public class MyService extends Service implements MediaPlayer.OnPreparedListener
 
     }
 
-    public void albumArt(int song){
+    public void albumArt(int song) {
+        Log.i(TAG,"albumArt(song) " + song);
+        songTitle = songTitleArray[song];
 
-        ac = albumCover[song];
+
+//        ac = albumCover[song];
 
         if (song == 0) {
             albumart = BitmapFactory.decodeResource(getResources(),
@@ -325,6 +330,25 @@ public class MyService extends Service implements MediaPlayer.OnPreparedListener
 
     }
 
+    public void zeroOut() {
+
+        mAudioPosition = 0;
+        MainActivity.progress = 0;
+        seconds = 0;
+
+    }
+
+    public void setProgress() {
+        Log.i(TAG,"setProgress");
+        MainActivity.isRunning = true;
+        songLength(mp.getDuration());
+        MainActivity.progressBar.setProgress(0);
+        Log.i(TAG, "setProgress: " + MainActivity.progressBar.getProgress());
+//        MainActivity.progressBar.setMax(seconds);
+//        Log.i(TAG, "seconds: " + seconds);
+
+
+    }
 
 
 }

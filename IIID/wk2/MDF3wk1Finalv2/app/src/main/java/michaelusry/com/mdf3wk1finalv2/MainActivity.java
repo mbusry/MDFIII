@@ -1,5 +1,9 @@
 package michaelusry.com.mdf3wk1finalv2;
 
+// MDF 3
+// Michael Usry
+// Term 1503
+
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -25,14 +29,13 @@ public class MainActivity extends Activity implements View.OnClickListener, Serv
 
     static String TAG = "MainActivity.TAG";
 
-    public static final int RESULT_DATA_RETURNED = 0x0101010;
     public static final String EXTRA_RECEIVER = "MainActivity.EXTRA_RECEIVER";
     public static final String DATA_RETURNED = "MainActivity.DATA_RETURNED";
     public static int progress = 0;
 
 
     ImageButton play,stop,forward,backward,pause;
-    ImageView albumcover;
+    static ImageView albumcover;
     TextView songTitle;
     Boolean playPressed;
     MyService mService;
@@ -41,8 +44,7 @@ public class MainActivity extends Activity implements View.OnClickListener, Serv
     public static Boolean isRunning = false;
     CheckBox mCheckBox;
     public static ProgressBar progressBar;
-
-
+    int sl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +76,7 @@ public class MainActivity extends Activity implements View.OnClickListener, Serv
         albumcover = (ImageView) findViewById(R.id.AlbumCover);
 
         progressBar = (SeekBar) findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.INVISIBLE);
 
         playPressed = false;
         loop = false;
@@ -95,6 +98,8 @@ public class MainActivity extends Activity implements View.OnClickListener, Serv
                 Log.i(TAG,"Play Button");
                 playPressed = true;
                 isRunning = true;
+                progressBar.setVisibility(View.VISIBLE);
+
                 try {
                     mService.play();
                 } catch (IOException e) {
@@ -104,8 +109,27 @@ public class MainActivity extends Activity implements View.OnClickListener, Serv
 
                 break;
 
+            case R.id.forwardButton:
+                Log.i(TAG,"Forward Button");
+                isRunning = false;
+                progress = 0;
+                sl = 0;
+                MyService.mAudioPosition = 0;
+                try {
+                    mService.forward();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                progressBar.setVisibility(View.VISIBLE);
+                progressBar();
+
+
+                break;
+
+
             case R.id.pauseButton:
                 Log.i(TAG, "Pause Button");
+                isRunning = false;
                 mService.pause();
                 break;
 
@@ -114,30 +138,21 @@ public class MainActivity extends Activity implements View.OnClickListener, Serv
                 mService.stop();
                 isRunning = false;
                 progress = 0;
+                progressBar.setVisibility(View.INVISIBLE);
                 break;
 
-            case R.id.forwardButton:
-                Log.i(TAG,"Forward Button");
-                progress = 0;
-                try {
-                    mService.forward();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                progressBar();
-
-
-                break;
             case R.id.backwardButton:
                 Log.i(TAG,"Back Button");
                 isRunning = false;
                 progress = 0;
+                sl = 0;
                 try {
                     mService.backward();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                isRunning = true;
+                progressBar.setVisibility(View.VISIBLE);
+                progressBar();
 
                 break;
             case R.id.loopBox:
@@ -166,6 +181,7 @@ public class MainActivity extends Activity implements View.OnClickListener, Serv
         isRunning = true;
         songTitle();
         albumCover();
+        progressBar();
         super.onResume();
     }
 
@@ -230,19 +246,22 @@ public class MainActivity extends Activity implements View.OnClickListener, Serv
     public void progressBar(){
         Log.i(TAG,"progressBar");
 
-        final int sl = MyService.seconds;
+        sl = MyService.seconds;
 
         Log.i(TAG,"sl: " + sl);
+
 
         new Thread(new Runnable() {
             public void run() {
 
 
                 while (progress < sl && isRunning == true) {
+                    Log.i(TAG,"while loop: sl: " + sl);
 
                     handle.post(new Runnable() {
 
                         public void run() {
+                            Log.i(TAG,"handle: sl: " + sl);
 
                             progressBar.setMax(sl);
                             progressBar.setProgress(progress);
@@ -260,8 +279,6 @@ public class MainActivity extends Activity implements View.OnClickListener, Serv
                 }
             }
         }).start();
-
-
 
 
 
