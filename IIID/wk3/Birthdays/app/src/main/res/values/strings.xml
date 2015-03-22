@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Birthdays</string>
+    <string name="firstname">First Name:</string>
+    <string name="lastname">Last Name:</string>
+    <string name="dateofbirth">Date of Birth:</string>
+    <string name = "empty">No Info</string>
+    <string name = "action_add">Add</string>
+    <string name="btn_save">Save</string>
+    <string name="btn_back">Back</string>
+
+    <string name="btn_list">List</string>
+    <string name="btn_done">Done</string>
+    <string name ="btn_add">Add</string>
+
+
+
+</resources>
